@@ -8,14 +8,24 @@ namespace GBEmulator
     public IntPtr Window { get; private set; }
     public IntPtr PrimarySurface { get; private set; }
     public IntPtr Renderer { get; private set; }
+    public Memory Memory { get; }
 
-    public Screen()
+    public Screen(Memory memory)
     {
+      Memory = memory;
     }
 
     public void Render()
     {
+      SDL.SDL_SetRenderDrawColor(Renderer, 0xFF, 0xFF, 0xFF, 0xFF); // Background color (White)
 			SDL.SDL_RenderClear(Renderer);
+
+      SDL.SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 0xFF); // Foreground color (black)
+      
+      for(int i=200; i < 300; i++){
+        SDL.SDL_RenderDrawPoint(Renderer, 420, i);
+      }
+
 			SDL.SDL_RenderPresent(Renderer);
     }
 
@@ -45,8 +55,6 @@ namespace GBEmulator
       if((Renderer == IntPtr.Zero)){
         throw new InvalidOperationException("SDL CreateRenderer Failed");
       }
-
-      SDL.SDL_SetRenderDrawColor(Renderer, 0xFF, 0xFF, 0xFF, 0xFF); // MAGIC NUMBERS?
     }
   }
 }

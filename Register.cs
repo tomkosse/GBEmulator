@@ -1,29 +1,38 @@
+using System;
+using System.Collections;
+
 namespace GBEmulator
 {
   public class Register
   {
+    public Clock LastInstructionClock { get; private set; }
+
     // 8-bit registers, represented as a byte
-    private byte A;
-    public byte B { get; private set; }
-    public byte C { get; private set; }
-    private byte D;
-    private byte E;
-    private byte H;
-    private byte L;
-    private byte F;
+    public byte A;
+    public byte B;
+    public byte C;
+    public byte D;
+    public byte E;
+    public byte H;
+    public byte L;
 
     // 16-bit registers, represented as Short
-    private short AF
+    public short AF
     {
       get
       {
-        return new TwoByteShort(A, F).Short;
+        var lowerByte = Utilities.BitArrayToByte(new BitArray(new bool[] { ZeroFlag, SubstractFlag, HalfCarryFlag, CarryFlag, false, false, false, false }));
+        return new TwoByteShort(A, lowerByte).Short;
       }
       set
       {
         var tbs = new TwoByteShort(value);
         A = tbs.HigherByte;
-        F = tbs.LowerByte;
+        var bitArray = new BitArray(new byte[] { tbs.LowerByte });
+        ZeroFlag = bitArray[7];
+        SubstractFlag = bitArray[6];
+        HalfCarryFlag = bitArray[5];
+        CarryFlag = bitArray[4];
       }
     }
 
@@ -72,14 +81,44 @@ namespace GBEmulator
     private byte IME = 1;
 
     // 16-bit (execution) registers, represented as a int
-    private short ProgramCounter;
-    public short StackPointer { get; private set; }
-    public short I { get; private set; }
+    public short ProgramCounter;
+    public int StackPointer { get; private set; }
+
+    public short I { get; private set; } //Interrupt
     public short R { get; set; }
 
-    public Clock LastInstructionClock { get; private set; }
+    /*
+     On the gameboy this is represented as a byte like this:
+     Z N H C 0 0 0 0
+     Zero Flag (Z)
+     Substract Flag (N)
+     Half Carry Flag (H)
+     Carry Flag (C)
+     But have booleans :D
+    */
+    public bool ZeroFlag { get; set; }
+    public bool SubstractFlag { get; set; }
+    public bool HalfCarryFlag { get; set; }
+    public bool CarryFlag { get; set; }
 
-    public Register(Clock lastInstruction) => LastInstructionClock = lastInstruction ?? throw new System.ArgumentNullException(nameof(lastInstruction));
+    public void Print()
+    {
+      System.Console.WriteLine($"A: {A.ToString("X2")}, B: {B.ToString("X2")}, C: {C.ToString("X2")}, D: {D.ToString("X2")}, E: {E.ToString("X2")}, H: {H.ToString("X2")}, L: {L.ToString("X2")}");
+
+      System.Console.WriteLine("Z: " + ZeroFlag + " N: " + SubstractFlag + " H: " + HalfCarryFlag + " C: " + CarryFlag);
+    }
+
+    public Register(Clock lastInstruction) {
+      ProgramCounter = 0x100; // Program counter starts at 0x100
+      StackPointer = 0xFFFE; // Stackpointer starts at 0xFFFE
+
+      AF = 0x01B0; // GB/SGB identifier
+      BC = 0x0013;
+      DE = 0x00D8;
+      HL = 0x014D;
+
+      LastInstructionClock = new Clock();
+    }
 
     public void DecreaseStackPointer()
     {
@@ -98,7 +137,7 @@ namespace GBEmulator
 
     internal void IncrementProgramCounter()
     {
-      // ?
+      ProgramCounter++;
     }
   }
 }
