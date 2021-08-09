@@ -9,6 +9,7 @@ namespace GBEmulator
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console(Serilog.Events.LogEventLevel.Error)
+                .WriteTo.File(new Serilog.Formatting.Json.JsonFormatter(), "log.log")
                 .CreateLogger();
                 
             var filepath = args[0];

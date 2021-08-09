@@ -5,72 +5,75 @@ using Serilog;
 namespace GBEmulator
 {
 
-  // Simple representation of a Gameboy Z80 CPU
-  public class Processor
-  {
-    public Clock Clock {get; private set;}
-    public Register Register { get; private set; }
-    public Memory Memory { get; }
-    public bool Stopped { get; internal set; }
-
-    public Instructions instructions;
-
-    public static Processor CreateNew(Memory memory)
+    // Simple representation of a Gameboy Z80 CPU
+    public class Processor
     {
-      var clock = new Clock();
-      var register = new Register(clock);
+        public Clock Clock { get; private set; }
+        public Register Register { get; private set; }
+        public Memory Memory { get; }
+        public bool Stopped { get; internal set; }
 
-      return new Processor(clock, register, memory);
-    }
+        public Instructions instructions;
 
-    private Processor(Clock clock, Register register, Memory memory)
-    {
-      Clock = clock ?? throw new System.ArgumentNullException(nameof(clock));
-      Register = register ?? throw new System.ArgumentNullException(nameof(register));
-      Memory = memory ?? throw new System.ArgumentNullException(nameof(memory));
-      instructions = new Instructions();
-    }
+        public static Processor CreateNew(Memory memory)
+        {
+            var clock = new Clock();
+            var register = new Register(clock);
 
-    private void ExecuteInstruction(OpCode opCode)
-    {
-      Register.R = (short)((Register.R + (short)1) & (short)127);
-      var operation = instructions.GetOperation(opCode);
-      operation.Invoke(this, Memory);
-      Clock.Add(Register.LastInstructionClock);
-    }
+            return new Processor(clock, register, memory);
+        }
 
-    public void ExecuteNextInstruction()
-    {
-      string pc = Register.ProgramCounter.ToString("X8");
-      var opCode = GetInstruction();
-      Log.Logger.Warning("Addr: " + pc + $" - Executing {opCode} ({((byte)opCode).ToString("X2")})");
-      ExecuteInstruction(opCode);
-      Register.Print();
-    }
+        private Processor(Clock clock, Register register, Memory memory)
+        {
+            Clock = clock ?? throw new System.ArgumentNullException(nameof(clock));
+            Register = register ?? throw new System.ArgumentNullException(nameof(register));
+            Memory = memory ?? throw new System.ArgumentNullException(nameof(memory));
+            instructions = new Instructions();
+        }
 
-    private OpCode GetInstruction(){
-      var OpCode = Memory.GetInstruction(Register.ProgramCounter);
-      Register.IncrementProgramCounter();
-      return OpCode;
-    }
+        private void ExecuteInstruction(OpCode opCode)
+        {
+            Register.R = (short)((Register.R + (short)1) & (short)127);
+            var operation = instructions.GetOperation(opCode);
+            operation.Invoke(this, Memory);
+            Clock.Add(Register.LastInstructionClock);
+        }
 
-    public byte GetNextByte() {
-      byte b = Memory.ReadByte(Register.ProgramCounter);
-      Log.Logger.Information($"Read byte {((byte)b).ToString("X8")} from {Register.ProgramCounter.ToString("X8")}");
-      Register.IncrementProgramCounter();
-      return b;
-    }
+        public void ExecuteNextInstruction()
+        {
+            string pc = Register.ProgramCounter.ToString("X8");
+            var opCode = GetInstruction();
+            Log.Logger.Warning("Addr: " + pc + $" - Executing {opCode} ({((byte)opCode).ToString("X2")})");
+            ExecuteInstruction(opCode);
+            Register.Print();
+        }
 
-    public sbyte GetNextSByte() {
-      sbyte b = Memory.ReadSByte(Register.ProgramCounter);
-      Log.Logger.Information($"Read signed byte {((byte)b).ToString("X8")} from {Register.ProgramCounter.ToString("X8")}");
-      Register.IncrementProgramCounter();
-      return b;
-    }
+        private OpCode GetInstruction()
+        {
+            var OpCode = Memory.GetInstruction(Register.ProgramCounter);
+            Register.IncrementProgramCounter();
+            return OpCode;
+        }
 
-    internal void DoVBlank()
-    {
-      
+        public byte GetNextByte()
+        {
+            byte b = Memory.ReadByte(Register.ProgramCounter);
+            Log.Logger.Information($"Read byte {((byte)b).ToString("X8")} from {Register.ProgramCounter.ToString("X8")}");
+            Register.IncrementProgramCounter();
+            return b;
+        }
+
+        public sbyte GetNextSByte()
+        {
+            sbyte b = Memory.ReadSByte(Register.ProgramCounter);
+            Log.Logger.Information($"Read signed byte {((byte)b).ToString("X8")} from {Register.ProgramCounter.ToString("X8")}");
+            Register.IncrementProgramCounter();
+            return b;
+        }
+
+        internal void DoVBlank()
+        {
+
+        }
     }
-  }
 }
