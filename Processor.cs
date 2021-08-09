@@ -15,9 +15,6 @@ namespace GBEmulator
 
     public Instructions instructions;
 
-    private int _halt;
-    private int _stop;
-
     public static Processor CreateNew(Memory memory)
     {
       var clock = new Clock();
@@ -28,9 +25,6 @@ namespace GBEmulator
 
     private Processor(Clock clock, Register register, Memory memory)
     {
-      _stop = 0;
-      _halt = 0;
-
       Clock = clock ?? throw new System.ArgumentNullException(nameof(clock));
       Register = register ?? throw new System.ArgumentNullException(nameof(register));
       Memory = memory ?? throw new System.ArgumentNullException(nameof(memory));

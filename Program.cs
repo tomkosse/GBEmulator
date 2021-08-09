@@ -8,9 +8,7 @@ namespace GBEmulator
         static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console( 
-                    Serilog.Events.LogEventLevel.Information
-                )
+                .WriteTo.Console()
                 .CreateLogger();
                 
             var filepath = args[0];

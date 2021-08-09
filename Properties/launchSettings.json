@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GBEmulator": {
+      "commandName": "Project",
+      "commandLineArgs": "./roms/dmg_boot.bin"
+    }
+  }
+}

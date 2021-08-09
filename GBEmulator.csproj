@@ -7,6 +7,122 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="roms\01-special.gb" />
+    <None Remove="roms\02-interrupts.gb" />
+    <None Remove="roms\03-op sp,hl.gb" />
+    <None Remove="roms\04-op r,imm.gb" />
+    <None Remove="roms\05-op rp.gb" />
+    <None Remove="roms\06-ld r,r.gb" />
+    <None Remove="roms\07-jr,jp,call,ret,rst.gb" />
+    <None Remove="roms\08-misc instrs.gb" />
+    <None Remove="roms\09-op r,r.gb" />
+    <None Remove="roms\10-bit ops.gb" />
+    <None Remove="roms\11-op a,%28hl%29.gb" />
+    <None Remove="roms\dmg_boot.bin" />
+    <None Remove="roms\DrMario.gb" />
+    <None Remove="roms\switch-speed-ch2-lc-1-cgb.gb" />
+    <None Remove="roms\switch-speed-ch2-lc-2-cgb.gb" />
+    <None Remove="roms\switch-speed-ch2-lc-3-cgb.gb" />
+    <None Remove="roms\switch-speed-ch2-lc-4-cgb.gb" />
+    <None Remove="roms\switch-speed-ch2-lc-5-cgb.gb" />
+    <None Remove="roms\switch-speed-div-cgb.gb" />
+    <None Remove="roms\switch-speed-tima-00-1-cgb.gb" />
+    <None Remove="roms\switch-speed-tima-00-2-cgb.gb" />
+    <None Remove="roms\switch-speed-tima-01-cgb.gb" />
+    <None Remove="roms\switch-speed-tima-02-cgb.gb" />
+    <None Remove="roms\switch-speed-tima-03-cgb.gb" />
+    <None Remove="roms\switch-speed-tima-if-cgb.gb" />
+    <None Remove="roms\switch-speed-tima-inc-cgb.gb" />
+    <None Remove="roms\Tetris.gb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="SDL2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\01-special.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\02-interrupts.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\03-op sp,hl.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\04-op r,imm.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\05-op rp.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\06-ld r,r.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\07-jr,jp,call,ret,rst.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\08-misc instrs.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\09-op r,r.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\10-bit ops.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\11-op a,(hl).gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\dmg_boot.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\DrMario.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-ch2-lc-1-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-ch2-lc-2-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-ch2-lc-3-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-ch2-lc-4-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-ch2-lc-5-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-div-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-tima-00-1-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-tima-00-2-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-tima-01-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-tima-02-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-tima-03-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-tima-if-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\switch-speed-tima-inc-cgb.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roms\Tetris.gb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.sinks.console" Version="4.0.0" />
   </ItemGroup>
