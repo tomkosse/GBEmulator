@@ -5,4 +5,9 @@
     <TargetFramework>netcoreapp5</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.sinks.console" Version="4.0.0" />
+  </ItemGroup>
 </Project>

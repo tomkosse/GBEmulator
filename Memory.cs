@@ -1,6 +1,7 @@
 using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
+using Serilog;
 
 namespace GBEmulator
 {
@@ -66,6 +67,18 @@ namespace GBEmulator
         }
       }
     }
+    public sbyte ReadSByte(int address)
+    {
+      using(var handle = Heap.Pin())
+      {
+        unsafe
+        {
+          var addr = (sbyte*)handle.Pointer + address;
+          var value = *addr;
+          return Convert.ToSByte(value);
+        }
+      }
+    }
 
     public char ReadWord(int address)
     {
@@ -83,7 +96,7 @@ namespace GBEmulator
     public void WriteByte(int address, byte value)
     {
       if (address == 0xFF02 && value == 0x81) {
-        Console.WriteLine("Written to datapin: " + ReadByte(0xFF01));
+        Log.Logger.Verbose("Written to datapin: " + ReadByte(0xFF01));
       }
       using(var handle = Heap.Pin())
       {
@@ -98,7 +111,7 @@ namespace GBEmulator
     public void WriteShort(int address, ushort value)
     {
       if (address == 0xFF02 && value == 0x81) {
-        Console.WriteLine("Written to datapin: " + ReadByte(0xFF01));
+        Log.Logger.Verbose("Written to datapin: " + ReadByte(0xFF01));
       }
       using(var handle = Heap.Pin())
       {

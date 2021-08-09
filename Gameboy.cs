@@ -1,4 +1,5 @@
 using System.Threading;
+using Serilog;
 using static SDL2.SDL;
 
 namespace GBEmulator
@@ -6,8 +7,8 @@ namespace GBEmulator
   public class Gameboy
   {
     private bool IsRunning = true;
-    private bool DebugStep = false;
-    private bool Debugging = false;
+    private bool DebugStep = true;
+    private bool Debugging = true;
 
     public Processor Processor { get; private set; }
     public Memory Memory { get; private set; }
@@ -90,12 +91,13 @@ namespace GBEmulator
 
     public void Render()
     {
+      Processor.DoVBlank();
       Screen.Render();
     }
 
     public void Exit()
     {
-      System.Console.WriteLine("Exiting..");
+      Log.Logger.Verbose("Exiting..");
     }
   }
 }

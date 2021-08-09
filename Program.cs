@@ -1,4 +1,5 @@
 ﻿using System;
+using Serilog;
 
 namespace GBEmulator
 {
@@ -6,6 +7,12 @@ namespace GBEmulator
     {
         static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console( 
+                    Serilog.Events.LogEventLevel.Information
+                )
+                .CreateLogger();
+                
             var filepath = args[0];
 
             var romFile = System.IO.File.ReadAllBytes(filepath);

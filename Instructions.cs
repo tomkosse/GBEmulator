@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using Serilog;
 
 namespace GBEmulator
 {
@@ -23,7 +24,7 @@ namespace GBEmulator
 
         if (action == null)
         {
-          System.Console.WriteLine("Missing implementation of: " + opCode);
+          Log.Logger.Verbose("Missing implementation of: " + opCode);
         }
         else
         {
@@ -54,28 +55,18 @@ namespace GBEmulator
       processor.Register.CarryFlag = (processor.Register.A & 0xFFFF) < 0;
     }
 
-    private void ANDA(Processor processor, Memory memory) 
+    private void ANDA(Processor processor, Memory memory)
     {
-      processor.Register.A = (byte)(processor.Register.A & processor.Register.A);      
+      processor.Register.A = (byte)(processor.Register.A & processor.Register.A);
 
       processor.Register.ZeroFlag = (processor.Register.A == 0);
       processor.Register.SubstractFlag = false;
       processor.Register.HalfCarryFlag = true;
       processor.Register.CarryFlag = false;
     }
-    private void ANDB(Processor processor, Memory memory) 
+    private void ANDB(Processor processor, Memory memory)
     {
-      processor.Register.A = (byte)(processor.Register.A & processor.Register.B);      
-
-      processor.Register.ZeroFlag = (processor.Register.A == 0);
-      processor.Register.SubstractFlag = false;
-      processor.Register.HalfCarryFlag = true;
-      processor.Register.CarryFlag = false;
-    }
-
-    private void ANDC(Processor processor, Memory memory) 
-    {
-      processor.Register.A = (byte)(processor.Register.A & processor.Register.C);      
+      processor.Register.A = (byte)(processor.Register.A & processor.Register.B);
 
       processor.Register.ZeroFlag = (processor.Register.A == 0);
       processor.Register.SubstractFlag = false;
@@ -83,7 +74,17 @@ namespace GBEmulator
       processor.Register.CarryFlag = false;
     }
 
-    private void ANDD(Processor processor, Memory memory) 
+    private void ANDC(Processor processor, Memory memory)
+    {
+      processor.Register.A = (byte)(processor.Register.A & processor.Register.C);
+
+      processor.Register.ZeroFlag = (processor.Register.A == 0);
+      processor.Register.SubstractFlag = false;
+      processor.Register.HalfCarryFlag = true;
+      processor.Register.CarryFlag = false;
+    }
+
+    private void ANDD(Processor processor, Memory memory)
     {
       processor.Register.A = (byte)(processor.Register.A & processor.Register.D);
 
@@ -93,7 +94,7 @@ namespace GBEmulator
       processor.Register.CarryFlag = false;
     }
 
-    private void ANDE(Processor processor, Memory memory) 
+    private void ANDE(Processor processor, Memory memory)
     {
       processor.Register.A = (byte)(processor.Register.A & processor.Register.E);
 
@@ -103,7 +104,7 @@ namespace GBEmulator
       processor.Register.CarryFlag = false;
     }
 
-    private void ANDN(Processor processor, Memory memory) 
+    private void ANDN(Processor processor, Memory memory)
     {
       processor.Register.A = (byte)(processor.Register.A & processor.GetNextByte());
 
@@ -125,11 +126,12 @@ namespace GBEmulator
 
     private void NOP(Processor processor, Memory memory)
     {
-      
+
     }
 
-    private void STOP(Processor processor, Memory memory) {
-      processor.Stopped = true;      
+    private void STOP(Processor processor, Memory memory)
+    {
+      processor.Stopped = true;
     }
 
     private void JP_nn(Processor processor, Memory memory)
@@ -141,7 +143,8 @@ namespace GBEmulator
 
     private void JP_NZ_nn(Processor processor, Memory memory)
     {
-      if(!processor.Register.ZeroFlag) {
+      if (!processor.Register.ZeroFlag)
+      {
         var parameter1 = processor.GetNextByte();
         var parameter2 = processor.GetNextByte();
         processor.Register.ProgramCounter = new TwoByteShort(parameter2, parameter1).Short;
@@ -180,7 +183,7 @@ namespace GBEmulator
       }
       else
       {
-        
+
       }
     }
 
@@ -192,7 +195,7 @@ namespace GBEmulator
       }
       else
       {
-        
+
       }
     }
 
@@ -228,7 +231,12 @@ namespace GBEmulator
 
     private void EI(Processor processor, Memory memory)
     {
-      
+      processor.Register.IME = 1;
+    }
+
+    private void DI(Processor processor, Memory memory)
+    {
+      processor.Register.IME = 0;
     }
 
     private void CALL(Processor processor, Memory memory)
@@ -299,22 +307,22 @@ namespace GBEmulator
 
     private void LDLHL(Processor processor, Memory memory)
     {
-      processor.Register.L = memory.ReadByte(processor.Register.HL);      
+      processor.Register.L = memory.ReadByte(processor.Register.HL);
     }
 
     private void LDAHL(Processor processor, Memory memory)
     {
-      processor.Register.A = memory.ReadByte(processor.Register.HL);      
+      processor.Register.A = memory.ReadByte(processor.Register.HL);
     }
 
     private void LDAN(Processor processor, Memory memory)
     {
       processor.Register.A = processor.GetNextByte();
     }
-    
+
     private void LDBA(Processor processor, Memory memory)
     {
-      processor.Register.B = processor.Register.A;      
+      processor.Register.B = processor.Register.A;
     }
 
     private void LDBB(Processor processor, Memory memory)
@@ -322,11 +330,18 @@ namespace GBEmulator
       NOP(processor, memory);
     }
 
+    private void LD_SP_NN(Processor processor, Memory memory)
+    {
+      var parameter1 = processor.GetNextByte();
+      var parameter2 = processor.GetNextByte();
+      processor.Register.StackPointer = new TwoByteShort(parameter1, parameter2).Short;
+    }
+
     private void LD_BC_NN(Processor processor, Memory memory)
     {
       var parameter1 = processor.GetNextByte();
       var parameter2 = processor.GetNextByte();
-      processor.Register.BC = new TwoByteShort(parameter1, parameter2).Short;      
+      processor.Register.BC = new TwoByteShort(parameter1, parameter2).Short;
     }
 
     private void LD_NN_A(Processor processor, Memory memory)
@@ -345,7 +360,7 @@ namespace GBEmulator
 
     private void DECC(Processor processor, Memory memory)
     {
-      processor.Register.C--;      
+      processor.Register.C--;
 
       processor.Register.ZeroFlag = processor.Register.C == 0;
       processor.Register.SubstractFlag = true;
@@ -354,7 +369,7 @@ namespace GBEmulator
 
     private void DECB(Processor processor, Memory memory)
     {
-      processor.Register.B--;      
+      processor.Register.B--;
 
       processor.Register.ZeroFlag = processor.Register.B == 0;
       processor.Register.SubstractFlag = true;
@@ -363,7 +378,7 @@ namespace GBEmulator
 
     private void DECBC(Processor processor, Memory memory)
     {
-      processor.Register.BC--;      
+      processor.Register.BC--;
 
       processor.Register.ZeroFlag = processor.Register.BC == 0;
       processor.Register.SubstractFlag = true;
@@ -372,7 +387,7 @@ namespace GBEmulator
 
     private void DECHL(Processor processor, Memory memory)
     {
-      processor.Register.HL--;      
+      processor.Register.HL--;
 
       processor.Register.ZeroFlag = processor.Register.HL == 0;
       processor.Register.SubstractFlag = true;
@@ -381,7 +396,7 @@ namespace GBEmulator
 
     private void DECHL_Parentheses(Processor processor, Memory memory)
     {
-      memory.WriteByte(processor.Register.HL, (byte)(memory.ReadByte(processor.Register.HL)-1));
+      memory.WriteByte(processor.Register.HL, (byte)(memory.ReadByte(processor.Register.HL) - 1));
 
       processor.Register.ZeroFlag = processor.Register.HL == 0;
       processor.Register.SubstractFlag = true;
@@ -393,11 +408,21 @@ namespace GBEmulator
       memory.WriteByte(processor.Register.HL, processor.GetNextByte());
     }
 
+    private void BIT_7_H(Processor processor, Memory memory)
+    {
+      int bitvalue = (processor.Register.H >> 7) & 1;
+
+      processor.Register.ZeroFlag = bitvalue == 0;
+      processor.Register.SubstractFlag = false;
+      processor.Register.HalfCarryFlag = true;
+    }
+
     private void LDDHLA(Processor processor, Memory memory)
     {
-      processor.Register.HL = processor.Register.A;
+      memory.WriteByte(processor.Register.HL, processor.Register.A);
       processor.Register.HL = (ushort)(processor.Register.HL - 1);
-      
+
+      processor.Register.IncrementProgramCounter();
 
       processor.Register.ZeroFlag = processor.Register.HL == 0;
       processor.Register.SubstractFlag = true;
@@ -412,10 +437,10 @@ namespace GBEmulator
 
     private void JRNZ(Processor processor, Memory memory)
     {
-      var parameter1 = processor.GetNextByte();
+      var parameter1 = processor.GetNextSByte(); // Interpreted as signed byte; first bit indicates positive or negative
       if (processor.Register.ZeroFlag == false)
       {
-        processor.Register.ProgramCounter += parameter1;
+        processor.Register.ProgramCounter = (ushort)(processor.Register.ProgramCounter + parameter1);
       }
     }
 
@@ -479,7 +504,7 @@ namespace GBEmulator
     private void INCB(Processor processor, Memory memory)
     {
       processor.Register.B++;
-      
+
       processor.Register.ZeroFlag = processor.Register.B == 0;
       processor.Register.SubstractFlag = false;
       processor.Register.HalfCarryFlag = (processor.Register.B & 0xF) < 0;
@@ -487,7 +512,7 @@ namespace GBEmulator
     private void INCC(Processor processor, Memory memory)
     {
       processor.Register.C++;
-      
+
       processor.Register.ZeroFlag = processor.Register.C == 0;
       processor.Register.SubstractFlag = false;
       processor.Register.HalfCarryFlag = (processor.Register.C & 0xF) < 0;
@@ -495,7 +520,7 @@ namespace GBEmulator
     private void INCD(Processor processor, Memory memory)
     {
       processor.Register.D++;
-      
+
       processor.Register.ZeroFlag = processor.Register.D == 0;
       processor.Register.SubstractFlag = false;
       processor.Register.HalfCarryFlag = (processor.Register.D & 0xF) < 0;
@@ -504,7 +529,7 @@ namespace GBEmulator
     private void INCDE(Processor processor, Memory memory)
     {
       processor.Register.DE++;
-      
+
       processor.Register.ZeroFlag = processor.Register.DE == 0;
       processor.Register.SubstractFlag = false;
       processor.Register.HalfCarryFlag = (processor.Register.DE & 0xF) < 0;
@@ -513,7 +538,7 @@ namespace GBEmulator
     private void INCE(Processor processor, Memory memory)
     {
       processor.Register.E++;
-      
+
       processor.Register.ZeroFlag = processor.Register.E == 0;
       processor.Register.SubstractFlag = false;
       processor.Register.HalfCarryFlag = (processor.Register.E & 0xF) < 0;
@@ -521,7 +546,7 @@ namespace GBEmulator
     private void INCH(Processor processor, Memory memory)
     {
       processor.Register.H++;
-      
+
       processor.Register.ZeroFlag = processor.Register.H == 0;
       processor.Register.SubstractFlag = false;
       processor.Register.HalfCarryFlag = (processor.Register.H & 0xF) < 0;
@@ -529,7 +554,7 @@ namespace GBEmulator
     private void INCL(Processor processor, Memory memory)
     {
       processor.Register.L++;
-      
+
       processor.Register.ZeroFlag = processor.Register.L == 0;
       processor.Register.SubstractFlag = false;
       processor.Register.HalfCarryFlag = (processor.Register.L & 0xF) < 0;
@@ -538,7 +563,7 @@ namespace GBEmulator
     private void INCHL(Processor processor, Memory memory)
     {
       processor.Register.HL++;
-      
+
       processor.Register.ZeroFlag = processor.Register.HL == 0;
       processor.Register.SubstractFlag = false;
       processor.Register.HalfCarryFlag = (processor.Register.HL & 0xF) < 0;
@@ -547,7 +572,7 @@ namespace GBEmulator
     private void INCBC(Processor processor, Memory memory)
     {
       processor.Register.BC++;
-      
+
       processor.Register.ZeroFlag = processor.Register.BC == 0;
       processor.Register.SubstractFlag = false;
       processor.Register.HalfCarryFlag = (processor.Register.BC & 0xF) < 0;
@@ -558,7 +583,7 @@ namespace GBEmulator
       var result = processor.Register.A ^ processor.Register.A;
       processor.Register.A = (byte)result;
 
-      
+
 
       processor.Register.ZeroFlag = result == 0;
       processor.Register.SubstractFlag = false;
@@ -570,34 +595,34 @@ namespace GBEmulator
     {
       var parameter1 = processor.GetNextByte();
       var parameter2 = processor.GetNextByte();
-      processor.Register.HL = new TwoByteShort(parameter1, parameter2).Short;
+      processor.Register.HL = new TwoByteShort(parameter2, parameter1).Short;
     }
 
     private void LDADE(Processor processor, Memory memory)
     {
-      processor.Register.A = new TwoByteShort(processor.Register.DE).LowerByte;      
+      processor.Register.A = new TwoByteShort(processor.Register.DE).LowerByte;
     }
 
     private void LDIHL(Processor processor, Memory memory)
     {
       processor.Register.HL = new TwoByteShort(0, processor.Register.A).Short;
-      processor.Register.HL++;      
+      processor.Register.HL++;
     }
-    
-    private void LDIAHL(Processor processor, Memory memory) 
+
+    private void LDIAHL(Processor processor, Memory memory)
     {
       processor.Register.A = memory.ReadByte(processor.Register.HL);
-      processor.Register.HL++;      
+      processor.Register.HL++;
     }
 
     private void ADCAB(Processor processor, Memory memory)
     {
-      processor.Register.A += (byte)(processor.Register.B + (processor.Register.CarryFlag ? 1 : 0));     
-      
+      processor.Register.A += (byte)(processor.Register.B + (processor.Register.CarryFlag ? 1 : 0));
+
       processor.Register.ZeroFlag = (processor.Register.A == 0);
       processor.Register.SubstractFlag = false;
       processor.Register.HalfCarryFlag = (processor.Register.A & 0x10) == 0x10;
-      processor.Register.CarryFlag = (processor.Register.A & 0xFFFF) < 0; 
+      processor.Register.CarryFlag = (processor.Register.A & 0xFFFF) < 0;
     }
 
     private void ADCAC(Processor processor, Memory memory)
@@ -613,13 +638,13 @@ namespace GBEmulator
     private void LDCN(Processor processor, Memory memory)
     {
       var parameter1 = processor.GetNextByte();
-      processor.Register.C = parameter1;          
+      processor.Register.C = parameter1;
     }
 
     private void LDBN(Processor processor, Memory memory)
     {
       var parameter1 = processor.GetNextByte();
-      processor.Register.B = parameter1;          
+      processor.Register.B = parameter1;
     }
 
     #region Helpers
@@ -629,7 +654,7 @@ namespace GBEmulator
       processor.Register.IncreaseStackPointer();
       byte value = memory.ReadByte(processor.Register.StackPointer);
 
-      System.Console.WriteLine($"Read from stack: {processor.Register.StackPointer.ToString("X8")} - {value.ToString("X8")}");
+      Log.Logger.Verbose($"Read from stack: {processor.Register.StackPointer.ToString("X8")} - {value.ToString("X8")}");
       return value;
     }
 
@@ -638,7 +663,7 @@ namespace GBEmulator
       processor.Register.DecreaseStackPointer();
       memory.WriteByte(processor.Register.StackPointer, value);
 
-      System.Console.WriteLine($"Written to stack: {processor.Register.StackPointer.ToString("X8")} - {value.ToString("X8")}");
+      Log.Logger.Verbose($"Written to stack: {processor.Register.StackPointer.ToString("X8")} - {value.ToString("X8")}");
     }
 
     private void PushOntoStack(Processor processor, Memory memory, ushort value)
@@ -647,7 +672,7 @@ namespace GBEmulator
       memory.WriteShort(processor.Register.StackPointer, value);
       processor.Register.DecreaseStackPointer();
 
-      System.Console.WriteLine($"Written to stack: {processor.Register.StackPointer.ToString("X8")} - {value.ToString("X16")}");
+      Log.Logger.Verbose($"Written to stack: {processor.Register.StackPointer.ToString("X8")} - {value.ToString("X16")}");
     }
 
 

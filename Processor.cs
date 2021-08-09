@@ -1,5 +1,7 @@
 
 
+using Serilog;
+
 namespace GBEmulator
 {
 
@@ -45,8 +47,9 @@ namespace GBEmulator
 
     public void ExecuteNextInstruction()
     {
+      string pc = Register.ProgramCounter.ToString("X8");
       var opCode = GetInstruction();
-      System.Console.WriteLine("Addr: " + Register.ProgramCounter.ToString("X8") + $" - Executing {opCode} ({((byte)opCode).ToString("X2")})");
+      Log.Logger.Debug("Addr: " + pc + $" - Executing {opCode} ({((byte)opCode).ToString("X2")})");
       ExecuteInstruction(opCode);
       Register.Print();
     }
@@ -59,8 +62,21 @@ namespace GBEmulator
 
     public byte GetNextByte() {
       byte b = Memory.ReadByte(Register.ProgramCounter);
+      Log.Logger.Verbose($"Read byte {((byte)b).ToString("X8")} from {Register.ProgramCounter.ToString("X8")}");
       Register.IncrementProgramCounter();
       return b;
+    }
+
+    public sbyte GetNextSByte() {
+      sbyte b = Memory.ReadSByte(Register.ProgramCounter);
+      Log.Logger.Verbose($"Read signed byte {((byte)b).ToString("X8")} from {Register.ProgramCounter.ToString("X8")}");
+      Register.IncrementProgramCounter();
+      return b;
+    }
+
+    internal void DoVBlank()
+    {
+      
     }
   }
 }

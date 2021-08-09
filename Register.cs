@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Serilog;
 
 namespace GBEmulator
 {
@@ -78,11 +79,11 @@ namespace GBEmulator
       }
     }
 
-    private byte IME = 1;
+    public byte IME = 1;
 
     // 16-bit (execution) registers, represented as a int
     public ushort ProgramCounter { get; set; }
-    public ushort StackPointer { get; private set; }
+    public ushort StackPointer { get; set; }
 
     public short I { get; private set; } //Interrupt
     public short R { get; set; }
@@ -97,20 +98,21 @@ namespace GBEmulator
      But have booleans :D
     */
     public bool ZeroFlag { get; set; }
+  
     public bool SubstractFlag { get; set; }
     public bool HalfCarryFlag { get; set; }
     public bool CarryFlag { get; set; }
 
     public void Print()
     {
-      System.Console.WriteLine($"A: {A.ToString("X2")}, B: {B.ToString("X2")}, C: {C.ToString("X2")}, D: {D.ToString("X2")}, E: {E.ToString("X2")}, H: {H.ToString("X2")}, L: {L.ToString("X2")}");
+      Log.Logger.Verbose($"A: {A.ToString("X2")}, B: {B.ToString("X2")}, C: {C.ToString("X2")}, D: {D.ToString("X2")}, E: {E.ToString("X2")}, H: {H.ToString("X2")}, L: {L.ToString("X2")}");
 
-      System.Console.WriteLine("Z: " + ZeroFlag + " N: " + SubstractFlag + " H: " + HalfCarryFlag + " C: " + CarryFlag);
+      Log.Logger.Verbose("Z: " + ZeroFlag + " N: " + SubstractFlag + " H: " + HalfCarryFlag + " C: " + CarryFlag);
     }
 
     public Register(Clock lastInstruction)
     {
-      ProgramCounter = 0x100; // Program counter starts at 0x100
+      ProgramCounter = 0; //0x100; // Program counter starts at 0x100
       StackPointer = 0xFFFE; // Stackpointer starts at 0xFFFE
 
       AF = 0x01B0; // GB/SGB identifier

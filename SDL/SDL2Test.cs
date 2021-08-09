@@ -1,4 +1,5 @@
 using SDL2;
+using Serilog;
 using System;
 
 namespace SDL2Test
@@ -10,7 +11,7 @@ namespace SDL2Test
             // Initilizes SDL.
             if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO) < 0)
             {
-                Console.WriteLine($"There was an issue initilizing SDL. {SDL.SDL_GetError()}");
+                Log.Logger.Verbose($"There was an issue initilizing SDL. {SDL.SDL_GetError()}");
             }
 
             // Create a new window given a title, size, and passes it a flag indicating it should be shown.
@@ -23,7 +24,7 @@ namespace SDL2Test
 
             if (window == IntPtr.Zero)
             {
-                Console.WriteLine($"There was an issue creating the window. {SDL.SDL_GetError()}");
+                Log.Logger.Verbose($"There was an issue creating the window. {SDL.SDL_GetError()}");
             }
 
             // Creates a new SDL hardware renderer using the default graphics device with VSYNC enabled.
@@ -34,13 +35,13 @@ namespace SDL2Test
 
             if (renderer == IntPtr.Zero)
             {
-                Console.WriteLine($"There was an issue creating the renderer. {SDL.SDL_GetError()}");
+                Log.Logger.Verbose($"There was an issue creating the renderer. {SDL.SDL_GetError()}");
             }
 
             // Initilizes SDL_image for use with png files.
             if (SDL_image.IMG_Init(SDL_image.IMG_InitFlags.IMG_INIT_PNG) == 0)
             {
-                Console.WriteLine($"There was an issue initilizing SDL2_Image {SDL_image.IMG_GetError()}");
+                Log.Logger.Verbose($"There was an issue initilizing SDL2_Image {SDL_image.IMG_GetError()}");
             }
 
             var running = true;
@@ -62,13 +63,13 @@ namespace SDL2Test
                 // Sets the color that the screen will be cleared with.
                 if (SDL.SDL_SetRenderDrawColor(renderer, 135, 206, 235, 255) < 0)
                 {
-                    Console.WriteLine($"There was an issue with setting the render draw color. {SDL.SDL_GetError()}");
+                    Log.Logger.Verbose($"There was an issue with setting the render draw color. {SDL.SDL_GetError()}");
                 }
 
                 // Clears the current render surface.
                 if (SDL.SDL_RenderClear(renderer) < 0)
                 {
-                    Console.WriteLine($"There was an issue with clearing the render surface. {SDL.SDL_GetError()}");
+                    Log.Logger.Verbose($"There was an issue with clearing the render surface. {SDL.SDL_GetError()}");
                 }
 
                 // Switches out the currently presented render surface with the one we just did work on.

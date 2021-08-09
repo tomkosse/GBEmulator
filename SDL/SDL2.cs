@@ -255,7 +255,7 @@ namespace SDL2
 
 			/* NOTE: This isn't the full structure since
 			 * the native SDL_RWops contains a hidden union full of
-			 * internal information and platform-specific stuff depending
+			 * internal Verbose and platform-specific stuff depending
 			 * on what conditions the native library was built with
 			 */
 		}
@@ -1100,7 +1100,7 @@ namespace SDL2
 		{
 			SDL_MESSAGEBOX_ERROR =		0x00000010,
 			SDL_MESSAGEBOX_WARNING =	0x00000020,
-			SDL_MESSAGEBOX_INFORMATION =	0x00000040
+			SDL_MESSAGEBOX_Verbose =	0x00000040
 		}
 
 		[Flags]
