@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Serilog;
 using static SDL2.SDL;
@@ -26,19 +27,31 @@ namespace GBEmulator
     {
       // Init
       Init(romFile);
-
-      while (IsRunning)
-      {
-        while (SDL2.SDL.SDL_PollEvent(out SDL_Event ev) > 0)
-        {
-          HandleEvent(ev);
-        }
-        if(!Processor.Stopped)
-        {
-          Update();
-          Render();
-        }
-      }
+            DateTime now = DateTime.Now;
+            Log.Logger.Error("Starting execution");
+            try
+            {
+                while (IsRunning)
+                {
+                    while (SDL2.SDL.SDL_PollEvent(out SDL_Event ev) > 0)
+                    {
+                        HandleEvent(ev);
+                    }
+                    if (!Processor.Stopped)
+                    {
+                        Update();
+                        Render();
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                Log.Error(e, "");
+            }
+            finally
+            {
+                Log.Logger.Error("Total run time:" + (DateTime.Now - now).TotalMilliseconds + "ms");
+            }
 
       Exit();
     }
@@ -91,13 +104,13 @@ namespace GBEmulator
 
     public void Render()
     {
-        Processor.DoVBlank();
-        Screen.Render();
+        //Processor.DoVBlank();
+        //Screen.Render();
     }
 
     public void Exit()
     {
-      Log.Logger.Verbose("Exiting..");
+      Log.Logger.Information("Exiting..");
     }
   }
 }

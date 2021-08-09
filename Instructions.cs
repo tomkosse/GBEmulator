@@ -24,7 +24,7 @@ namespace GBEmulator
 
         if (action == null)
         {
-          Log.Logger.Verbose("Missing implementation of: " + opCode);
+          Log.Logger.Information("Missing implementation of: " + opCode);
         }
         else
         {
@@ -654,7 +654,7 @@ namespace GBEmulator
       processor.Register.IncreaseStackPointer();
       byte value = memory.ReadByte(processor.Register.StackPointer);
 
-      Log.Logger.Verbose($"Read from stack: {processor.Register.StackPointer.ToString("X8")} - {value.ToString("X8")}");
+      Log.Logger.Information($"Read from stack: {processor.Register.StackPointer.ToString("X8")} - {value.ToString("X8")}");
       return value;
     }
 
@@ -663,7 +663,7 @@ namespace GBEmulator
       processor.Register.DecreaseStackPointer();
       memory.WriteByte(processor.Register.StackPointer, value);
 
-      Log.Logger.Verbose($"Written to stack: {processor.Register.StackPointer.ToString("X8")} - {value.ToString("X8")}");
+      Log.Logger.Information($"Written to stack: {processor.Register.StackPointer.ToString("X8")} - {value.ToString("X8")}");
     }
 
     private void PushOntoStack(Processor processor, Memory memory, ushort value)
@@ -672,7 +672,7 @@ namespace GBEmulator
       memory.WriteShort(processor.Register.StackPointer, value);
       processor.Register.DecreaseStackPointer();
 
-      Log.Logger.Verbose($"Written to stack: {processor.Register.StackPointer.ToString("X8")} - {value.ToString("X16")}");
+      Log.Logger.Information($"Written to stack: {processor.Register.StackPointer.ToString("X8")} - {value.ToString("X16")}");
     }
 
 

@@ -96,7 +96,7 @@ namespace GBEmulator
     public void WriteByte(int address, byte value)
     {
       if (address == 0xFF02 && value == 0x81) {
-        Log.Logger.Verbose("Written to datapin: " + ReadByte(0xFF01));
+        Log.Logger.Information("Written to datapin: " + ReadByte(0xFF01));
       }
       using(var handle = Heap.Pin())
       {
@@ -111,7 +111,7 @@ namespace GBEmulator
     public void WriteShort(int address, ushort value)
     {
       if (address == 0xFF02 && value == 0x81) {
-        Log.Logger.Verbose("Written to datapin: " + ReadByte(0xFF01));
+        Log.Logger.Information("Written to datapin: " + ReadByte(0xFF01));
       }
       using(var handle = Heap.Pin())
       {

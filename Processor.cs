@@ -43,7 +43,7 @@ namespace GBEmulator
     {
       string pc = Register.ProgramCounter.ToString("X8");
       var opCode = GetInstruction();
-      Log.Logger.Debug("Addr: " + pc + $" - Executing {opCode} ({((byte)opCode).ToString("X2")})");
+      Log.Logger.Warning("Addr: " + pc + $" - Executing {opCode} ({((byte)opCode).ToString("X2")})");
       ExecuteInstruction(opCode);
       Register.Print();
     }
@@ -56,14 +56,14 @@ namespace GBEmulator
 
     public byte GetNextByte() {
       byte b = Memory.ReadByte(Register.ProgramCounter);
-      Log.Logger.Verbose($"Read byte {((byte)b).ToString("X8")} from {Register.ProgramCounter.ToString("X8")}");
+      Log.Logger.Information($"Read byte {((byte)b).ToString("X8")} from {Register.ProgramCounter.ToString("X8")}");
       Register.IncrementProgramCounter();
       return b;
     }
 
     public sbyte GetNextSByte() {
       sbyte b = Memory.ReadSByte(Register.ProgramCounter);
-      Log.Logger.Verbose($"Read signed byte {((byte)b).ToString("X8")} from {Register.ProgramCounter.ToString("X8")}");
+      Log.Logger.Information($"Read signed byte {((byte)b).ToString("X8")} from {Register.ProgramCounter.ToString("X8")}");
       Register.IncrementProgramCounter();
       return b;
     }

@@ -255,7 +255,7 @@ namespace SDL2
 
 			/* NOTE: This isn't the full structure since
 			 * the native SDL_RWops contains a hidden union full of
-			 * internal Verbose and platform-specific stuff depending
+			 * internal Information and platform-specific stuff depending
 			 * on what conditions the native library was built with
 			 */
 		}
@@ -857,7 +857,7 @@ namespace SDL2
 
 		public enum SDL_LogPriority
 		{
-			SDL_LOG_PRIORITY_VERBOSE = 1,
+			SDL_LOG_PRIORITY_Information = 1,
 			SDL_LOG_PRIORITY_DEBUG,
 			SDL_LOG_PRIORITY_INFO,
 			SDL_LOG_PRIORITY_WARN,
@@ -888,18 +888,18 @@ namespace SDL2
 		}
 
 		/* Use string.Format for arglists */
-		[DllImport(nativeLibName, EntryPoint = "SDL_LogVerbose", CallingConvention = CallingConvention.Cdecl)]
-		private static extern unsafe void INTERNAL_SDL_LogVerbose(
+		[DllImport(nativeLibName, EntryPoint = "SDL_LogInformation", CallingConvention = CallingConvention.Cdecl)]
+		private static extern unsafe void INTERNAL_SDL_LogInformation(
 			int category,
 			byte* fmtAndArglist
 		);
-		public static unsafe void SDL_LogVerbose(
+		public static unsafe void SDL_LogInformation(
 			int category,
 			string fmtAndArglist
 		) {
 			int utf8FmtAndArglistBufSize = Utf8Size(fmtAndArglist);
 			byte* utf8FmtAndArglist = stackalloc byte[utf8FmtAndArglistBufSize];
-			INTERNAL_SDL_LogVerbose(
+			INTERNAL_SDL_LogInformation(
 				category,
 				Utf8Encode(fmtAndArglist, utf8FmtAndArglist, utf8FmtAndArglistBufSize)
 			);
@@ -1100,7 +1100,7 @@ namespace SDL2
 		{
 			SDL_MESSAGEBOX_ERROR =		0x00000010,
 			SDL_MESSAGEBOX_WARNING =	0x00000020,
-			SDL_MESSAGEBOX_Verbose =	0x00000040
+			SDL_MESSAGEBOX_Information =	0x00000040
 		}
 
 		[Flags]

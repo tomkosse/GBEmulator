@@ -105,9 +105,9 @@ namespace GBEmulator
 
     public void Print()
     {
-      Log.Logger.Verbose($"A: {A.ToString("X2")}, B: {B.ToString("X2")}, C: {C.ToString("X2")}, D: {D.ToString("X2")}, E: {E.ToString("X2")}, H: {H.ToString("X2")}, L: {L.ToString("X2")}");
+      Log.Logger.Information($"A: {A.ToString("X2")}, B: {B.ToString("X2")}, C: {C.ToString("X2")}, D: {D.ToString("X2")}, E: {E.ToString("X2")}, H: {H.ToString("X2")}, L: {L.ToString("X2")}");
 
-      Log.Logger.Verbose("Z: " + ZeroFlag + " N: " + SubstractFlag + " H: " + HalfCarryFlag + " C: " + CarryFlag);
+      Log.Logger.Information("Z: " + ZeroFlag + " N: " + SubstractFlag + " H: " + HalfCarryFlag + " C: " + CarryFlag);
     }
 
     public Register(Clock lastInstruction)
