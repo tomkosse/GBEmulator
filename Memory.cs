@@ -95,7 +95,7 @@ namespace GBEmulator
       }
     }
 
-    public void WriteShort(int address, short value)
+    public void WriteShort(int address, ushort value)
     {
       if (address == 0xFF02 && value == 0x81) {
         Console.WriteLine("Written to datapin: " + ReadByte(0xFF01));
@@ -104,7 +104,7 @@ namespace GBEmulator
       {
         unsafe
         {
-          var addr = (short*)handle.Pointer + address;
+          var addr = (ushort*)handle.Pointer + address;
           *addr = value;
         }
       }
@@ -125,24 +125,10 @@ namespace GBEmulator
       }
     }
 
-    public (OpCode, byte param1, byte param2) GetInstruction(int programCounter)
+    public OpCode GetInstruction(int programCounter)
     {
       var firstByte = ReadByte(programCounter);
-      var secondByte = ReadByte(programCounter + 1);
-      var thirdByte = ReadByte(programCounter + 2);
-      return ((OpCode)firstByte, secondByte, thirdByte);
-    }
-
-    public void WriteWord(int address, char value)
-    {
-      using(var handle = Heap.Pin())
-      {
-        unsafe
-        {
-          var addr = (char*)handle.Pointer + address;
-          *addr = value;
-        }
-      }
+      return (OpCode)firstByte;
     }
   }
 }

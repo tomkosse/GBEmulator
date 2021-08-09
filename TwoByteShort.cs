@@ -9,9 +9,9 @@ namespace GBEmulator
         [FieldOffset(1)]
         public byte HigherByte;
         [FieldOffset(0)]
-        public short Short;
+        public ushort Short;
 
-    public TwoByteShort(short value) : this()
+    public TwoByteShort(ushort value) : this()
     {
         Short = value;
     }

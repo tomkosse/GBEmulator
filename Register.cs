@@ -16,8 +16,8 @@ namespace GBEmulator
     public byte H;
     public byte L;
 
-    // 16-bit registers, represented as Short
-    public short AF
+    // 16-bit registers, represented as UShort
+    public ushort AF
     {
       get
       {
@@ -36,7 +36,7 @@ namespace GBEmulator
       }
     }
 
-    public short BC
+    public ushort BC
     {
       get
       {
@@ -50,7 +50,7 @@ namespace GBEmulator
       }
     }
 
-    public short DE
+    public ushort DE
     {
       get
       {
@@ -64,7 +64,7 @@ namespace GBEmulator
       }
     }
 
-    public short HL
+    public ushort HL
     {
       get
       {
@@ -81,8 +81,8 @@ namespace GBEmulator
     private byte IME = 1;
 
     // 16-bit (execution) registers, represented as a int
-    public short ProgramCounter;
-    public int StackPointer { get; private set; }
+    public ushort ProgramCounter { get; set; }
+    public ushort StackPointer { get; private set; }
 
     public short I { get; private set; } //Interrupt
     public short R { get; set; }
@@ -108,7 +108,8 @@ namespace GBEmulator
       System.Console.WriteLine("Z: " + ZeroFlag + " N: " + SubstractFlag + " H: " + HalfCarryFlag + " C: " + CarryFlag);
     }
 
-    public Register(Clock lastInstruction) {
+    public Register(Clock lastInstruction)
+    {
       ProgramCounter = 0x100; // Program counter starts at 0x100
       StackPointer = 0xFFFE; // Stackpointer starts at 0xFFFE
 

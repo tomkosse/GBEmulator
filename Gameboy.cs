@@ -6,8 +6,8 @@ namespace GBEmulator
   public class Gameboy
   {
     private bool IsRunning = true;
-    private bool DebugStep = true;
-    private bool Debugging = true;
+    private bool DebugStep = false;
+    private bool Debugging = false;
 
     public Processor Processor { get; private set; }
     public Memory Memory { get; private set; }

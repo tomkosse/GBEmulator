@@ -35,20 +35,32 @@ namespace GBEmulator
       instructions = new Instructions();
     }
 
-    private void ExecuteInstruction(OpCode opCode, byte parameter1, byte parameter2)
+    private void ExecuteInstruction(OpCode opCode)
     {
       Register.R = (short)((Register.R + (short)1) & (short)127);
       var operation = instructions.GetOperation(opCode);
-      operation.Invoke(this, Memory, parameter1, parameter2);
+      operation.Invoke(this, Memory);
       Clock.Add(Register.LastInstructionClock);
     }
 
     public void ExecuteNextInstruction()
     {
-      (var opCode, var firstParam, var secondParam) = Memory.GetInstruction(Register.ProgramCounter);
-      System.Console.WriteLine("Addr: " + Register.ProgramCounter.ToString("X8") + $" - Executing {opCode} ({((byte)opCode).ToString("X2")}) with params {firstParam.ToString("X2")}, {secondParam.ToString("X2")}");
-      ExecuteInstruction(opCode, firstParam, secondParam);
+      var opCode = GetInstruction();
+      System.Console.WriteLine("Addr: " + Register.ProgramCounter.ToString("X8") + $" - Executing {opCode} ({((byte)opCode).ToString("X2")})");
+      ExecuteInstruction(opCode);
       Register.Print();
+    }
+
+    private OpCode GetInstruction(){
+      var OpCode = Memory.GetInstruction(Register.ProgramCounter);
+      Register.IncrementProgramCounter();
+      return OpCode;
+    }
+
+    public byte GetNextByte() {
+      byte b = Memory.ReadByte(Register.ProgramCounter);
+      Register.IncrementProgramCounter();
+      return b;
     }
   }
 }
